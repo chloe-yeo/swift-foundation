@@ -1165,6 +1165,12 @@ public struct Data : Equatable, Hashable, RandomAccessCollection, MutableCollect
             self.storage = storage
             self.slice = RangeReference(0..<count)
         }
+        
+        // Not exposed as ABI and only usable by internal, non-inlined code and therefore not @inlinable
+        init(_ storage: __DataStorage, range: Range<Int>) {
+            self.storage = storage
+            self.slice = RangeReference(range)
+        }
 
         @inlinable // This is @inlinable as trivially computable (and inlining may help avoid retain-release traffic).
         mutating func ensureUniqueReference() {
@@ -2255,11 +2261,19 @@ public struct Data : Equatable, Hashable, RandomAccessCollection, MutableCollect
                   start: UnsafeMutableRawPointer(Builtin.addressOfBorrow(self)),
                   count: _representation.count
                 )
-            case .large(let slice):
+            case .large(var slice):
+                // Clear _representation during the unique check to avoid double counting the reference, and assign the mutated slice back to _representation afterwards
+                _representation = .empty
+                slice.ensureUniqueReference()
+                _representation = .large(slice)
                 buffer = unsafe UnsafeMutableRawBufferPointer(
                   start: slice.storage.mutableBytes?.advanced(by: slice.startIndex), count: slice.count
                 )
-            case .slice(let slice):
+            case .slice(var slice):
+                // Clear _representation during the unique check to avoid double counting the reference, and assign the mutated slice back to _representation afterwards
+                _representation = .empty
+                slice.ensureUniqueReference()
+                _representation = .slice(slice)
                 buffer = unsafe UnsafeMutableRawBufferPointer(
                   start: slice.storage.mutableBytes?.advanced(by: slice.startIndex), count: slice.count
                 )
@@ -2288,11 +2302,19 @@ public struct Data : Equatable, Hashable, RandomAccessCollection, MutableCollect
                   start: UnsafeMutableRawPointer(Builtin.addressOfBorrow(self)),
                   count: _representation.count
                 )
-            case .large(let slice):
+            case .large(var slice):
+                // Clear _representation during the unique check to avoid double counting the reference, and assign the mutated slice back to _representation afterwards
+                _representation = .empty
+                slice.ensureUniqueReference()
+                _representation = .large(slice)
                 buffer = unsafe UnsafeMutableRawBufferPointer(
                   start: slice.storage.mutableBytes?.advanced(by: slice.startIndex), count: slice.count
                 )
-            case .slice(let slice):
+            case .slice(var slice):
+                // Clear _representation during the unique check to avoid double counting the reference, and assign the mutated slice back to _representation afterwards
+                _representation = .empty
+                slice.ensureUniqueReference()
+                _representation = .slice(slice)
                 buffer = unsafe UnsafeMutableRawBufferPointer(
                   start: slice.storage.mutableBytes?.advanced(by: slice.startIndex), count: slice.count
                 )
