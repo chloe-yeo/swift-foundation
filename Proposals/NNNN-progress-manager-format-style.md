@@ -11,11 +11,11 @@
 
 ## Introduction 
 
-With the introduction of Swift-native API for progress reporting in [SF-0023](https://github.com/chloe-yeo/swift-foundation/blob/6342785b7d09db02de145a38c161a8872179daac/Proposals/0023-progress-manager.md), we would like to add `ProgressManager.FormatStyle` and `ProgressReporter.FormatStyle` to format the `fractionCompleted`, `completedCount` and `totalCount` properties of `ProgressManager` and `ProgressReporter` respectively. 
+With the introduction of Swift-native API for progress reporting in [SF-0023](https://github.com/swiftlang/swift-foundation/blob/main/Proposals/0023-progress-manager.md), we would like to add `ProgressManager.FormatStyle` and `ProgressReporter.FormatStyle` to format the `fractionCompleted`, `completedCount` and `totalCount` properties of `ProgressManager` and `ProgressReporter` respectively. 
 
 ## Motivation
 
-The addition of format styles for `ProgressManager` and `ProgressReporter` is important to enable adoption of `ProgressManager` and `ProgressReporter` in applications and UI components, such as SwiftUI's `ProgressView`. 
+The addition of format styles for `ProgressManager` and `ProgressReporter` is important to enable adoption of `ProgressManager` and `ProgressReporter` in applications and UI components.
 
 In its current state, without the addition of `ProgressManager.FormatStyle`, you would have to construct your own String-based description of a `ProgressManager` instance as follows: 
 
